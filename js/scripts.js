@@ -3,6 +3,7 @@
   const model = {
     init: function () {
       const model = this;
+      this.peopleList = [];
       fetch('https://swapi.co/api/')
         .then(function (response) {
           response.ok ? model.ok = true : model.ok = false; // check if API is up
@@ -24,9 +25,13 @@
       //   });
     },
     getData: function (type, num) {
-      fetch(`https://swapi.co/api/${type}/${num}/`)
+      const model = this;
+      return fetch(`https://swapi.co/api/${type}/${num}/`)
         .then(response => response.json())
-        .then(response => console.log(response))
+        .then(function (person) {
+          model.peopleList[num] = person;
+          return model.peopleList[num];
+        })
         .catch(function (e) {
           console.log(e);
         });
@@ -35,13 +40,14 @@
 
   const controller = {
     init: function () {
-      this.num = 0;
-      this.index = 0;
+      const controller = this;
+      controller.num = 0;
+      controller.index = 0;
       model.init();
       view.init();
     },
     getPerson: function () {
-      return model.peopleList[this.index];
+      return model.getData('people', this.num);
     },
     setApiStatus: function (status) {
       this.isWorking = status;
@@ -62,8 +68,8 @@
       this.dateInput.addEventListener('change', controller.updateBirthdate.bind(controller));
       this.personBtn = document.getElementById('person');
       this.personBtn.addEventListener('click', function () {
-        const person = controller.getPerson();
-        view.renderPerson(person);
+        controller.getPerson()
+          .then(person => view.renderPerson(person));
       });
     },
     renderPerson: function (person) {
