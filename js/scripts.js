@@ -3,13 +3,30 @@
   const model = {
     init: function () {
       const model = this;
-      fetch('https://swapi.co/api/people/')
-        .then(response => response.json())
+      fetch('https://swapi.co/api/')
         .then(function (response) {
-          model.peopleList = response.results;
-          console.log(model.peopleList);
-          return model.peopleList;
+          response.ok ? model.ok = true : model.ok = false; // check if API is up
+          return response.ok;
         })
+        .then(function (response) {
+          controller.setApiStatus(response);
+        })
+        .catch(e => console.log(e));
+      // fetch('https://swapi.co/api/people/')
+      //   .then(response => response.json())
+      //   .then(function (response) {
+      //     model.peopleList = response.results;
+      //     console.log(model.peopleList);
+      //     return model.peopleList;
+      //   })
+      //   .catch(function (e) {
+      //     console.log(e);
+      //   });
+    },
+    getData: function (type, num) {
+      fetch(`https://swapi.co/api/${type}/${num}/`)
+        .then(response => response.json())
+        .then(response => console.log(response))
         .catch(function (e) {
           console.log(e);
         });
@@ -25,6 +42,12 @@
     },
     getPerson: function () {
       return model.peopleList[this.index];
+    },
+    setApiStatus: function (status) {
+      this.isWorking = status;
+      if (!this.isWorking) {
+        view.displayNoApi();
+      }
     },
     updateBirthdate: function () {
       this.num = view.dateInput.value;
@@ -48,6 +71,13 @@
         <h2>${person.name}</h2>
       `;
       this.display.innerHTML = personDisplay;
+    },
+    displayNoApi: function () {
+      const statusMsg = `
+        <h2>Error</h2>
+          <p>The server seems to be down. Please try again later.</p>
+      `;
+      this.display.innerHTML = statusMsg;
     }
   };
   controller.init();
