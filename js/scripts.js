@@ -3,7 +3,7 @@
   const model = {
     init: function () {
       const model = this;
-      this.peopleList = [];
+      this.people = [];
       fetch('https://swapi.co/api/')
         .then(function (response) {
           response.ok ? model.ok = true : model.ok = false; // check if API is up
@@ -13,24 +13,18 @@
           controller.setApiStatus(response);
         })
         .catch(e => console.log(e));
-      // fetch('https://swapi.co/api/people/')
-      //   .then(response => response.json())
-      //   .then(function (response) {
-      //     model.peopleList = response.results;
-      //     console.log(model.peopleList);
-      //     return model.peopleList;
-      //   })
-      //   .catch(function (e) {
-      //     console.log(e);
-      //   });
     },
     getData: function (type, num) {
       const model = this;
+      // check if data already exists in model
+      if (model[type][num]) {
+        return Promise.resolve(model[type][num]);
+      }
       return fetch(`https://swapi.co/api/${type}/${num}/`)
         .then(response => response.json())
-        .then(function (person) {
-          model.peopleList[num] = person;
-          return model.peopleList[num];
+        .then(function (result) {
+          model[type][num] = result;
+          return model[type][num];
         })
         .catch(function (e) {
           console.log(e);
