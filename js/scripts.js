@@ -44,7 +44,7 @@
       model.init();
       view.init();
     },
-    getData: function (type) {
+    getDataByType: function (type) {
       return model.fetchInstance(type, this.num);
     },
     setApiStatus: function (status) {
@@ -60,13 +60,26 @@
 
   const view = {
     init: function () {
-      this.display = document.getElementById('display');
       this.dateInput = document.getElementById('birthdate');
-      this.dateInput.addEventListener('change', controller.updateBirthdate.bind(controller));
+      this.display = document.getElementById('display');
       this.personBtn = document.getElementById('person');
+      this.planetBtn = document.getElementById('planet');
+      this.speciesBtn = document.getElementById('species');
+      this.starshipBtn = document.getElementById('starship');
+      this.vehicleBtn = document.getElementById('vehicle');
+
+      this.dateInput.addEventListener('change', controller.updateBirthdate.bind(controller));
       this.personBtn.addEventListener('click', function () {
-        controller.getData('people')
+        controller.getDataByType('people')
           .then(person => view.renderPerson(person));
+      });
+      this.planetBtn.addEventListener('click', function () {
+        controller.getDataByType('planets')
+          .then(planet => view.renderPlanet(planet));
+      });
+      this.speciesBtn.addEventListener('click', function () {
+        controller.getDataByType('species')
+          .then(species => view.renderSpecies(species));
       });
     },
     renderPerson: function (person) {
@@ -74,6 +87,18 @@
         <h2>${person.name}</h2>
       `;
       this.display.innerHTML = personDisplay;
+    },
+    renderPlanet: function (planet) {
+      const planetDisplay = `
+        <h2>${planet.name}</h2>
+      `;
+      this.display.innerHTML = planetDisplay;
+    },
+    renderSpecies: function (species) {
+      const speciesDisplay = `
+        <h2>${species.name}</h2>
+      `;
+      this.display.innerHTML = speciesDisplay;
     },
     displayNoApi: function () {
       const statusMsg = `
