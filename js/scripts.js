@@ -45,18 +45,17 @@
 
   const controller = {
     init: function () {
+      this.num = 0;
+      this.index = 0;
       // model.init();
       view.init();
     },
     getPerson: function () {
-      const num = this.currentDate;
-      const index = (num - 1);
-      return model.peopleList[index];
+      return model.peopleList[this.index];
     },
     updateBirthdate: function () {
-      this.currentDate = view.dateInput.value;
-      // const person = this.getPerson(date);
-      // view.renderPerson(person);
+      this.num = view.dateInput.value;
+      this.index = this.num - 1; // array index will be one digit lower
     }
   };
 
