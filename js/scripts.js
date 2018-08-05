@@ -1,4 +1,5 @@
 /* global fetch */
+/* Starships are commented out due to data issue */
 (function () {
   const model = {
     init: function () {
@@ -6,7 +7,7 @@
       this.people = [];
       this.planets = [];
       this.species = [];
-      this.starships = [];
+      // this.starships = [];
       this.vehicles = [];
       fetch('https://swapi.co/api/')
         .then(function (response) {
@@ -65,7 +66,7 @@
       this.personBtn = document.getElementById('person');
       this.planetBtn = document.getElementById('planet');
       this.speciesBtn = document.getElementById('species');
-      this.starshipBtn = document.getElementById('starship');
+      // this.starshipBtn = document.getElementById('starship');
       this.vehicleBtn = document.getElementById('vehicle');
 
       this.dateInput.addEventListener('change', controller.updateBirthdate.bind(controller));
@@ -80,6 +81,14 @@
       this.speciesBtn.addEventListener('click', function () {
         controller.getDataByType('species')
           .then(species => view.renderSpecies(species));
+      });
+      // this.starshipBtn.addEventListener('click', function () {
+      //   controller.getDataByType('starships')
+      //     .then(starship => view.renderStarship(starship));
+      // });
+      this.vehicleBtn.addEventListener('click', function () {
+        controller.getDataByType('vehicles')
+          .then(vehicle => view.renderVehicle(vehicle));
       });
     },
     renderPerson: function (person) {
@@ -99,6 +108,18 @@
         <h2>${species.name}</h2>
       `;
       this.display.innerHTML = speciesDisplay;
+    },
+    // renderStarship: function (starship) {
+    //   const starshipDisplay = `
+    //     <h2>${starship.name}</h2>
+    //   `;
+    //   this.display.innerHTML = starshipDisplay;
+    // },
+    renderVehicle: function (vehicle) {
+      const vehicleDisplay = `
+        <h2>${vehicle.name}</h2>
+      `;
+      this.display.innerHTML = vehicleDisplay;
     },
     displayNoApi: function () {
       const statusMsg = `
